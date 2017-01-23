@@ -15,10 +15,25 @@ require "Target.php";
 $tree = Target::fromConfFile("conf.json");
 $active_set = readLog("active.log");
 
-foreach ($active_set as $active)
+$start = $_GET["start"];
+$stop = $_GET["stop"];
+
+if ($start != null || $stop != null)
 {
-	$tree->setActive($active);
+	if ($start != null && $tree->isLeaf($start) && !in_array($start, $active_set))
+	{
+		appendLog("active.log", $start, true);
+	}
+
+	if ($stop != null && $tree->isLeaf($stop) && in_array($stop, $active_set))
+	{
+		appendLog("active.log", $stop, false);
+	}
+
+	$active_set = readLog("active.log");
 }
+
+$tree->setActives($active_set);
 ?>
 
 <h1>Time Recording</h1>

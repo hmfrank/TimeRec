@@ -2,6 +2,21 @@
 
 /**
  * @param $filename string
+ * @param $target_full_name string
+ * @param $active bool
+ */
+function appendLog($filename, $target_full_name, $active)
+{
+	$line = time() . ($active ? " + " : " - ") . $target_full_name . "\n";
+
+	if (file_put_contents($filename, $line, FILE_APPEND) === false)
+	{
+		error("Can't write log file " . $filename . " !");
+	}
+}
+
+/**
+ * @param $filename string
  * @return string[]
  */
 function readLog($filename)
