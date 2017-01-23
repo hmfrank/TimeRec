@@ -73,6 +73,50 @@ class Target
 		}
 	}
 
+	function resetActive()
+	{
+		$this->active = false;
+
+		foreach ($this->children as $child)
+		{
+			$child->resetActive();
+		}
+	}
+
+	/**
+	 * @param $full_name string
+	 * @return bool
+	 */
+	function setActive($full_name)
+	{
+		$pos = strpos($full_name, ".");
+		$pos = $pos === false ? $pos = strlen($full_name) : $pos;
+
+		$first_part = substr($full_name, 0, $pos);
+		$last_part = substr($full_name, $pos + 1);
+
+		if ($first_part == $this->name)
+		{
+			if ($this->isLeaf())
+			{
+				$this->active = true;
+			}
+			else
+			{
+				foreach ($this->children as $child)
+				{
+					if ($child->setActive($last_part))
+					{
+						$this->active = true;
+						break;
+					}
+				}
+			}
+		}
+
+		return $this->active;
+	}
+
 	/**
 	 * @param $filename string
 	 * @return Target
