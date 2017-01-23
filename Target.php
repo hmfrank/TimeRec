@@ -45,7 +45,7 @@ class Target
 		if (!$root)
 		{
 			indent($i);
-			echo "<span " . ($this->active ? "class=\"active\"" : "") . ">" . $this->name . "</span>\n";
+			echo "<span " . ($this->active ? "class=\"active\"" : "") . ">" . htmlentities($this->name) . "</span>\n";
 		}
 
 		if ($this->isLeaf() && !$root)
@@ -127,13 +127,13 @@ class Target
 		$string = file_get_contents($filename);
 		if ($string === false)
 		{
-			return new Target("");
+			error("ERROR: Can't read config file " . $filename . " !");
 		}
 
 		$json = json_decode($string, true);
 		if ($json === null)
 		{
-			return new Target("");
+			error("ERROR: Invalid JSON config in " . $filename . " !");
 		}
 
 		return Target::fromJson("", $json);
