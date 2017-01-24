@@ -38,7 +38,11 @@ $tree->setActives($active_set);
 
 <h1>Time Recording</h1>
 
-<?php $tree->print("", 0, true); ?>
+<h2>Control Panel</h2>
+<?php $tree->show("", 0, true); ?>
+
+<h2>Statistics</h2>
+<pre>// TODO</pre>
 
 <style>
 	.active {

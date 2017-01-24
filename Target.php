@@ -64,7 +64,7 @@ class Target
 	 * @param $i int
 	 * @param $root bool
 	 */
-	function print($parent_full_name, $i, $root)
+	function show($parent_full_name, $i, $root)
 	{
 		$full_name = $root ? $this->name : $parent_full_name . "." . $this->name;
 
@@ -89,7 +89,7 @@ class Target
 				indent($i + 1);
 				echo "<li>\n";
 
-				$child->print($full_name, $i + 2, false);
+				$child->show($full_name, $i + 2, false);
 
 				indent($i + 1);
 				echo "</li>\n";
