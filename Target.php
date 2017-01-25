@@ -71,15 +71,23 @@ class Target
 		if (!$root)
 		{
 			indent($i);
-			echo "<span " . ($this->active ? "class=\"active\"" : "") . ">" . htmlentities($this->name) . "</span>\n";
+
+			if ($this->isLeaf())
+			{
+				echo "<a href=\".?" . ($this->active ? "stop" : "start") . "=" . urlencode($full_name) . "\">";
+			}
+
+			echo "<span " . ($this->active ? "class=\"active\"" : "") . ">" . htmlentities($this->name) . "</span>";
+
+			if ($this->isLeaf())
+			{
+				echo "</a>";
+			}
+
+			echo "\n";
 		}
 
-		if ($this->isLeaf() && !$root)
-		{
-			indent($i);
-			echo "<a href=\".?" . ($this->active ? "stop" : "start") . "=" . urlencode($full_name) . "\">toggle</a>\n";
-		}
-		else
+		if ($root || !$this->isLeaf())
 		{
 			indent($i);
 			echo "<ul>\n";
