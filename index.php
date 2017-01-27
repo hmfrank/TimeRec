@@ -13,7 +13,8 @@
 require "Target.php";
 
 $tree = Target::fromConfFile("conf.json");
-$active_set = readLog("active.log");
+$log_entries = readLog("active.log");
+$active_set = parseLogEntries($log_entries);
 
 $start = $_GET["start"];
 $stop = $_GET["stop"];
@@ -22,15 +23,19 @@ if ($start != null || $stop != null)
 {
 	if ($start != null && $tree->isLeaf($start) && !in_array($start, $active_set))
 	{
-		appendLog("active.log", $start, true);
+		$log_entry = new LogEntry(time(), true, $start);
+		array_push($log_entries, $log_entry);
+		appendLog($log_entry, "active.log");
 	}
 
 	if ($stop != null && $tree->isLeaf($stop) && in_array($stop, $active_set))
 	{
-		appendLog("active.log", $stop, false);
+		$log_entry = new LogEntry(time(), false, $stop);
+		array_push($log_entries, $log_entry);
+		appendLog($log_entry, "active.log");
 	}
 
-	$active_set = readLog("active.log");
+	$active_set = parseLogEntries($log_entries);
 }
 
 $tree->setActives($active_set);
@@ -38,11 +43,7 @@ $tree->setActives($active_set);
 
 <h1>Time Recording</h1>
 
-<h2>Control Panel</h2>
 <?php $tree->show("", 0, true); ?>
-
-<h2>Statistics</h2>
-<pre>// TODO</pre>
 
 <style>
 	.active {

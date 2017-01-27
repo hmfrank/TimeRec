@@ -1,13 +1,14 @@
 <?php
 
+require "LogEntry.php";
+
 /**
+ * @param $entry LogEntry
  * @param $filename string
- * @param $target_full_name string
- * @param $active bool
  */
-function appendLog($filename, $target_full_name, $active)
+function appendLog($entry, $filename)
 {
-	$line = time() . ($active ? " + " : " - ") . $target_full_name . "\n";
+	$line = $entry->time . ($entry->active ? " + " : " - ") . $entry->target_full_name . "\n";
 
 	if (file_put_contents($filename, $line, FILE_APPEND) === false)
 	{
@@ -17,7 +18,7 @@ function appendLog($filename, $target_full_name, $active)
 
 /**
  * @param $filename string
- * @return string[]
+ * @return LogEntry[]
  */
 function readLog($filename)
 {
@@ -28,28 +29,43 @@ function readLog($filename)
 		error("ERROR: Can't read log file " . $filename . " !");
 	}
 
+	$result = array();
+
+	foreach ($lines as $line)
+	{
+		$log_entry = LogEntry::fromLine($line);
+
+		if ($log_entry !== false)
+		{
+			array_push($result, $log_entry);
+		}
+	}
+
+	return $result;
+}
+
+/**
+ * @param $filename string
+ * @return string[]
+ */
+function parseLogEntries($entries)
+{
 	$active_set = array();
 	$inactive_set = array();
 
-	for ($i = count($lines) - 1; $i >= 0; $i--)
+	for ($i = count($entries) - 1; $i >= 0; $i--)
 	{
-		$line = $lines[$i];
-		$parts = explode(" ", $line);
+		$entry = $entries[$i];
 
-		if (count($parts) != 3)
+		if (!(in_array($entry->target_full_name, $active_set) || in_array($entry->target_full_name, $inactive_set)))
 		{
-			continue;
-		}
-
-		if (!(in_array($parts[2], $active_set) || in_array($parts[2], $inactive_set)))
-		{
-			if ($parts[1] == "+")
+			if ($entry->active)
 			{
-				array_push($active_set, $parts[2]);
+				array_push($active_set, $entry->target_full_name);
 			}
 			else
 			{
-				array_push($inactive_set, $parts[2]);
+				array_push($inactive_set, $entry->target_full_name);
 			}
 		}
 	}
