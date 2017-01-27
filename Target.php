@@ -25,6 +25,99 @@ class Target
 	}
 
 	/**
+	 * @param $parent_full_name string
+	 * @param $root bool
+	 * @param $depth int
+	 */
+	function show($parent_full_name = "", $root = true, $depth = 0)
+	{
+		$full_name = $root ? $this->name : $parent_full_name . "." . $this->name;
+
+		if ($root)
+		{
+			$depth = 0;
+			echo "<table>\n";
+			echo "\t<tr>\n";
+			echo "\t\t<th></th>\n";
+			echo "\t\t<th>Total</th>\n";
+			echo "\t</tr>\n";
+		}
+		else
+		{
+			echo "\t<tr" . ($this->active ? " class=\"active\"" : "") . ">\n";
+
+			echo "\t\t<td style=\"text-indent: " . $depth * 2 . "em\">";
+			if ($this->isLeaf())
+			{
+				echo "<a href=\"./?" . ($this->active ? "stop" : "start") . "=" . urlencode($full_name) . "\">";
+				echo htmlentities($this->name);
+				echo "</a>";
+			}
+			else
+			{
+				echo htmlentities($this->name);
+			}
+			echo "</td>\n";
+
+			echo "\t\t<td></td>\n";
+
+			echo "\t</tr>\n";
+		}
+
+		foreach ($this->children as $child)
+		{
+			$child->show($full_name, false, $depth + 1);
+		}
+
+		if ($root)
+		{
+			echo "</table>\n";
+		}
+
+		/**
+		if (!$root)
+		{
+		indent($i);
+
+		if ($this->isLeaf())
+		{
+		echo "<a href=\".?" . ($this->active ? "stop" : "start") . "=" . urlencode($full_name) . "\">";
+		}
+
+		echo "<span " . ($this->active ? "class=\"active\"" : "") . ">" . htmlentities($this->name) . "</span>";
+
+		if ($this->isLeaf())
+		{
+		echo "</a>";
+		}
+
+		echo "\n";
+		}
+
+		if ($root || !$this->isLeaf())
+		{
+		indent($i);
+		echo "<ul>\n";
+
+		foreach ($this->children as $child)
+		{
+		indent($i + 1);
+		echo "<li>\n";
+
+		$child->show($full_name, $i + 2, false);
+
+		indent($i + 1);
+		echo "</li>\n";
+		}
+
+		indent($i);
+		echo "</ul>\n";
+		}
+		 */
+	}
+
+
+	/**
 	 * @param $full_name  string|null
 	 * @return bool
 	 */
@@ -55,56 +148,6 @@ class Target
 			}
 
 			return false;
-		}
-	}
-
-
-	/**
-	 * @param $parent_full_name string
-	 * @param $i int
-	 * @param $root bool
-	 */
-	function show($parent_full_name, $i, $root)
-	{
-		$full_name = $root ? $this->name : $parent_full_name . "." . $this->name;
-
-		if (!$root)
-		{
-			indent($i);
-
-			if ($this->isLeaf())
-			{
-				echo "<a href=\".?" . ($this->active ? "stop" : "start") . "=" . urlencode($full_name) . "\">";
-			}
-
-			echo "<span " . ($this->active ? "class=\"active\"" : "") . ">" . htmlentities($this->name) . "</span>";
-
-			if ($this->isLeaf())
-			{
-				echo "</a>";
-			}
-
-			echo "\n";
-		}
-
-		if ($root || !$this->isLeaf())
-		{
-			indent($i);
-			echo "<ul>\n";
-
-			foreach ($this->children as $child)
-			{
-				indent($i + 1);
-				echo "<li>\n";
-
-				$child->show($full_name, $i + 2, false);
-
-				indent($i + 1);
-				echo "</li>\n";
-			}
-
-			indent($i);
-			echo "</ul>\n";
 		}
 	}
 

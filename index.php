@@ -43,11 +43,11 @@ $tree->setActives($active_set);
 
 <h1>Time Recording</h1>
 
-<?php $tree->show("", 0, true); ?>
+<?php $tree->show(); ?>
 
 <style>
 	.active {
-		color: tomato;
+		background-color: #ffe9b9;
 	}
 </style>
 
