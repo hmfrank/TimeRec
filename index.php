@@ -17,8 +17,8 @@ $forest = Forest::fromConfFile("conf.json");
 $log_entries = readLog("active.log");
 $active_set = parseLogEntries($log_entries);
 
-$start = $_GET["start"];
-$stop = $_GET["stop"];
+$start = isset($_GET["start"]) ? $_GET["start"] : null;
+$stop = isset($_GET["stop"]) ? $_GET["stop"] : null;
 
 if ($start != null || $stop != null)
 {
