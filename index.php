@@ -10,9 +10,10 @@
 <body>
 
 <?php
-require "Target.php";
+require "Forest.php";
+require "IO.php";
 
-$tree = Target::fromConfFile("conf.json");
+$forest = Forest::fromConfFile("conf.json");
 $log_entries = readLog("active.log");
 $active_set = parseLogEntries($log_entries);
 
@@ -21,14 +22,17 @@ $stop = $_GET["stop"];
 
 if ($start != null || $stop != null)
 {
-	if ($start != null && $tree->isLeaf($start) && !in_array($start, $active_set))
+	$start = explode(".", urldecode($start));
+	$stop = explode(".", urldecode($stop));
+
+	if ($start != null && $forest->isLeaf($start) && !in_array($start, $active_set))
 	{
 		$log_entry = new LogEntry(time(), true, $start);
 		array_push($log_entries, $log_entry);
 		appendLog($log_entry, "active.log");
 	}
 
-	if ($stop != null && $tree->isLeaf($stop) && in_array($stop, $active_set))
+	if ($stop != null && $forest->isLeaf($stop) && in_array($stop, $active_set))
 	{
 		$log_entry = new LogEntry(time(), false, $stop);
 		array_push($log_entries, $log_entry);
@@ -38,12 +42,15 @@ if ($start != null || $stop != null)
 	$active_set = parseLogEntries($log_entries);
 }
 
-$tree->setActives($active_set);
+foreach ($active_set as $path)
+{
+	$forest->setActive($path);
+}
 ?>
 
 <h1>Time Recording</h1>
 
-<?php $tree->show(); ?>
+<?php $forest->show(); ?>
 
 <style>
 	.active {

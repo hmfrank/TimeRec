@@ -8,7 +8,7 @@ require "LogEntry.php";
  */
 function appendLog($entry, $filename)
 {
-	$line = $entry->time . ($entry->active ? " + " : " - ") . $entry->target_full_name . "\n";
+	$line = $entry->time . ($entry->active ? " + " : " - ") . implode(".", $entry->path) . "\n";
 
 	if (file_put_contents($filename, $line, FILE_APPEND) === false)
 	{
@@ -45,8 +45,8 @@ function readLog($filename)
 }
 
 /**
- * @param $filename string
- * @return string[]
+ * @param $entries LogEntry[]
+ * @return string[][]
  */
 function parseLogEntries($entries)
 {
@@ -57,15 +57,15 @@ function parseLogEntries($entries)
 	{
 		$entry = $entries[$i];
 
-		if (!(in_array($entry->target_full_name, $active_set) || in_array($entry->target_full_name, $inactive_set)))
+		if (!(in_array($entry->path, $active_set) || in_array($entry->path, $inactive_set)))
 		{
 			if ($entry->active)
 			{
-				array_push($active_set, $entry->target_full_name);
+				array_push($active_set, $entry->path);
 			}
 			else
 			{
-				array_push($inactive_set, $entry->target_full_name);
+				array_push($inactive_set, $entry->path);
 			}
 		}
 	}

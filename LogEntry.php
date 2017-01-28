@@ -2,11 +2,11 @@
 
 class LogEntry
 {
-	function  __construct($time, $active, $target_full_name)
+	function  __construct($time, $active, $path)
 	{
 		$this->time	 = $time;
 		$this->active = $active;
-		$this->target_full_name = $target_full_name;
+		$this->path = $path;
 	}
 
 	/**
@@ -20,9 +20,9 @@ class LogEntry
 	public $active;
 
 	/**
-	 * @var string
+	 * @var string[]
 	 */
-	public $target_full_name;
+	public $path;
 
 	/**
 	 * @param $line string
@@ -45,8 +45,9 @@ class LogEntry
 		$active = $chunks[1] == "+";
 
 		$start = strpos($line, " ", strpos($line, " ") + 1) + 1;
-		$target_full_name = substr($line, $start);
+		$path = substr($line, $start);
+		$path = explode(".", $path);
 
-		return new LogEntry($time, $active, $target_full_name);
+		return new LogEntry($time, $active, $path);
 	}
 }
