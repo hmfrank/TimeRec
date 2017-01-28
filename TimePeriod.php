@@ -19,6 +19,25 @@ class TimePeriod
 		$this->end = $end;
 	}
 
+	static function getCurrentWeek()
+	{
+		$timestamp = time();
+		$now = getdate($timestamp);
+
+		$seconds_into_week = $now["seconds"] + 60 * $now["minutes"] + 3600 * $now["hours"] + 3600 * 24 * $now["wday"];
+
+		$start = $timestamp - $seconds_into_week;
+		$end = $start + 3600 * 24 * 7;
+
+		return new TimePeriod($start, $end);
+	}
+
+	static function getLastWeek()
+	{
+		$curent_week = TimePeriod::getCurrentWeek();
+		return new TimePeriod($curent_week->start - 3600 * 24 * 7, $curent_week->start);
+	}
+
 	/**
 	 * @param $log_entries LogEntry[]
 	 * @param $path string[]

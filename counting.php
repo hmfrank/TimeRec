@@ -5,11 +5,10 @@ require "TimePeriod.php";
 /**
  * @param $log_entries LogEntry[]
  * @param $path string[]
- * @param $start_time int
- * @param $end_time int
+ * @param $period TimePeriod
  * @return int
  */
-function countSeconds($log_entries, $path, $start_time, $end_time)
+function countSeconds($log_entries, $path, $period)
 {
 	$seconds = 0;
 	$periods = TimePeriod::getTimePeriods($log_entries, $path);
@@ -19,35 +18,35 @@ function countSeconds($log_entries, $path, $start_time, $end_time)
 	{
 		$p = $periods[$i];
 
-		if ($p->start < $start_time)
+		if ($p->start < $period->start)
 		{
-			if ($p->end > $start_time)
+			if ($p->end > $period->start)
 			{
-				// count from $start_time
-				if ($p->end < $end_time)
+				// count from $period->start
+				if ($p->end < $period->end)
 				{
 					// to $p->end
-					$seconds += $p->end - $start_time;
+					$seconds += $p->end - $period->start;
 				}
 				else
 				{
-					// to $end_time
-					$seconds += $end_time - $start_time;
+					// to $period->end
+					$seconds += $period->end - $period->start;
 				}
 			}
 		}
-		else if ($p->start < $end_time)
+		else if ($p->start < $period->end)
 		{
 			// count from $p->start
-			if ($p->end < $end_time)
+			if ($p->end < $period->end)
 			{
 				// to $p->end
 				$seconds += $p->end - $p->start;
 			}
 			else
 			{
-				// to $end_time
-				$seconds += $end_time - $p->start;
+				// to $period->end
+				$seconds += $period->end - $p->start;
 			}
 		}
 	}
