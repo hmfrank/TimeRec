@@ -77,6 +77,11 @@ class TimePeriod
 			}
 		}
 
+		if ($start != null)
+		{
+			array_push($result, new TimePeriod($start, time()));
+		}
+
 		return $result;
 	}
 }
