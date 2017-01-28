@@ -1,5 +1,6 @@
 <?php
 
+require "counting.php";
 require "utils.php";
 
 class Forest
@@ -61,20 +62,22 @@ class Forest
 		}
 	}
 
-	function show()
+	/**
+	 * @param $log_entries LogEntry[]
+	 */
+	function show($log_entries)
 	{
 		echo "<table>\n";
 
 		echo "\t<tr>\n";
 		echo "\t\t<th></th>\n";
-		echo "\t\t<th>Year</th>\n";
-		echo "\t\t<th>Week 1</th>\n";
-		echo "\t\t<th>Week 2</th>\n";
+		echo "\t\t<th>Last Week</th>\n";
+		echo "\t\t<th>Current Week</th>\n";
 		echo "\t</tr>\n";
 
 		foreach ($this->roots as $root)
 		{
-			$root->show(array($root->name));
+			$root->show(array($root->name), $log_entries);
 		}
 		echo "</table>\n";
 	}
@@ -199,12 +202,14 @@ class Node
 
 	/**
 	 * @param $absolute_path string[]
+	 * @param $log_entries LogEntry[]
 	 */
-	function show($absolute_path)
+	function show($absolute_path, $log_entries)
 	{
 		$indent = (count($absolute_path) - 1) * 2;
 
 		echo "\t<tr>\n";
+
 		echo "\t\t<td style=\"text-indent: " . $indent . "em\"" . ($this->active ? " class=\"active\"" : "") . ">";
 		if ($this->isLeaf(array()))
 		{
@@ -216,12 +221,16 @@ class Node
 			echo htmlentities($this->name);
 		}
 		echo "</td>\n";
+
+		echo "\t\t<td>" . countSeconds($log_entries, $absolute_path, TimePeriod::getLastWeek()) . "</td>\n";
+		echo "\t\t<td>" . countSeconds($log_entries, $absolute_path, TimePeriod::getCurrentWeek()) . "</td>\n";
+
 		echo "\t</tr>\n";
 
 		foreach ($this->children as $child)
 		{
 			array_push($absolute_path, $child->name);
-			$child->show($absolute_path);
+			$child->show($absolute_path, $log_entries);
 			array_pop($absolute_path);
 		}
 	}

@@ -50,7 +50,7 @@ foreach ($active_set as $path)
 
 <h1>Time Recording</h1>
 
-<?php $forest->show(); ?>
+<?php $forest->show($log_entries); ?>
 
 <style>
 	.active {
