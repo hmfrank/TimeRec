@@ -55,7 +55,7 @@ class TimePeriod
 		{
 			$entry = $log_entries[$i];
 
-			if ($entry->path == $path)
+			if ($path == $entry->path)
 			{
 				if ($entry->active)
 				{

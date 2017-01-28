@@ -14,6 +14,17 @@ class Forest
 	}
 
 	/**
+	 * @param $log_entries LogEntry[]
+	 */
+	function calculateDurations($log_entries)
+	{
+		foreach ($this->roots as $root)
+		{
+			$root->calculateDurations($log_entries, array($root->name));
+		}
+	}
+
+	/**
 	 * @param $path string[]
 	 * @return bool
 	 */
@@ -62,10 +73,7 @@ class Forest
 		}
 	}
 
-	/**
-	 * @param $log_entries LogEntry[]
-	 */
-	function show($log_entries)
+	function show()
 	{
 		echo "<table>\n";
 
@@ -77,7 +85,7 @@ class Forest
 
 		foreach ($this->roots as $root)
 		{
-			$root->show(array($root->name), $log_entries);
+			$root->show(array($root->name));
 		}
 		echo "</table>\n";
 	}
@@ -131,6 +139,9 @@ class Node
 	/** @var Node[] */
 	public $children;
 
+	/** @var int[] */
+	private $durations;
+
 	/**
 	 * @param $name string
 	 */
@@ -139,6 +150,37 @@ class Node
 		$this->name = $name;
 		$this->children = array();
 		$this->active = false;
+		$this->durations = array();
+	}
+
+	/**
+	 * @param $log_entries LogEntry[]
+	 * @param $absolute_path string[]
+	 * @return int[]
+	 */
+	function calculateDurations($log_entries, $absolute_path)
+	{
+		$this->durations = array(0, 0);
+
+		if ($this->isLeaf(array()))
+		{
+			$this->durations[0] = countSeconds($log_entries, $absolute_path, TimePeriod::getLastWeek());
+			$this->durations[1] = countSeconds($log_entries, $absolute_path, TimePeriod::getCurrentWeek());
+		}
+		else
+		{
+			foreach ($this->children as $child)
+			{
+				array_push($absolute_path, $child->name);
+				$child_durations = $child->calculateDurations($log_entries, $absolute_path);
+				array_pop($absolute_path);
+
+				$this->durations[0] += $child_durations[0];
+				$this->durations[1] += $child_durations[1];
+			}
+		}
+		
+		return $this->durations;
 	}
 
 	/**
@@ -202,9 +244,8 @@ class Node
 
 	/**
 	 * @param $absolute_path string[]
-	 * @param $log_entries LogEntry[]
 	 */
-	function show($absolute_path, $log_entries)
+	function show($absolute_path)
 	{
 		$indent = (count($absolute_path) - 1) * 2;
 
@@ -222,15 +263,18 @@ class Node
 		}
 		echo "</td>\n";
 
-		echo "\t\t<td>" . countSeconds($log_entries, $absolute_path, TimePeriod::getLastWeek()) . "</td>\n";
-		echo "\t\t<td>" . countSeconds($log_entries, $absolute_path, TimePeriod::getCurrentWeek()) . "</td>\n";
+		$n_durations = count($this->durations);
+		for ($i = 0; $i < $n_durations; $i++)
+		{
+			echo "\t\t<td>" . $this->durations[$i] . "</td>\n";
+		}
 
 		echo "\t</tr>\n";
 
 		foreach ($this->children as $child)
 		{
 			array_push($absolute_path, $child->name);
-			$child->show($absolute_path, $log_entries);
+			$child->show($absolute_path);
 			array_pop($absolute_path);
 		}
 	}

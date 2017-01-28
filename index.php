@@ -46,11 +46,13 @@ foreach ($active_set as $path)
 {
 	$forest->setActive($path);
 }
+
+$forest->calculateDurations($log_entries);
 ?>
 
 <h1>Time Recording</h1>
 
-<?php $forest->show($log_entries); ?>
+<?php $forest->show(); ?>
 
 <style>
 	.active {
