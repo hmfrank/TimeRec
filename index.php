@@ -11,7 +11,7 @@
 
 <?php
 require "Forest.php";
-require "IO.php";
+require "io.php";
 
 $forest = Forest::fromConfFile("conf.json");
 $log_entries = readLog("active.log");

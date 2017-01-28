@@ -1,11 +1,11 @@
 <?php
 
-require "Utils.php";
+require "utils.php";
 
 class Forest
 {
 	/** @var Node[] */
-	private $roots;
+	public $roots;
 
 	function __construct()
 	{
@@ -25,7 +25,7 @@ class Forest
 
 		foreach ($this->roots as $root)
 		{
-			if ($root->getName() == $path[0])
+			if ($root->name == $path[0])
 			{
 				return $root->isLeaf(array_slice($path, 1));
 			}
@@ -46,7 +46,7 @@ class Forest
 
 		foreach ($this->roots as $root)
 		{
-			if ($root->getName() == $path[0])
+			if ($root->name == $path[0])
 			{
 				$root->setActive(array_slice($path, 1));
 			}
@@ -74,7 +74,7 @@ class Forest
 
 		foreach ($this->roots as $root)
 		{
-			$root->show(array($root->getName()));
+			$root->show(array($root->name));
 		}
 		echo "</table>\n";
 	}
@@ -120,13 +120,13 @@ class Forest
 class Node
 {
 	/** @var string */
-	private $name;
+	public $name;
 
 	/** @var bool */
-	private $active;
+	public $active;
 
 	/** @var Node[] */
-	private $children;
+	public $children;
 
 	/**
 	 * @param $name string
@@ -136,14 +136,6 @@ class Node
 		$this->name = $name;
 		$this->children = array();
 		$this->active = false;
-	}
-
-	/**
-	 * @return string
-	 */
-	function getName()
-	{
-		return $this->name;
 	}
 
 	/**

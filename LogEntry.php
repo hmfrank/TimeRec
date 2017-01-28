@@ -2,13 +2,6 @@
 
 class LogEntry
 {
-	function  __construct($time, $active, $path)
-	{
-		$this->time	 = $time;
-		$this->active = $active;
-		$this->path = $path;
-	}
-
 	/**
 	 * @var int
 	 */
@@ -23,6 +16,13 @@ class LogEntry
 	 * @var string[]
 	 */
 	public $path;
+
+	function  __construct($time, $active, $path)
+	{
+		$this->time	 = $time;
+		$this->active = $active;
+		$this->path = $path;
+	}
 
 	/**
 	 * @param $line string
