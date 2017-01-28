@@ -179,7 +179,7 @@ class Node
 				$this->durations[1] += $child_durations[1];
 			}
 		}
-		
+
 		return $this->durations;
 	}
 
@@ -249,9 +249,9 @@ class Node
 	{
 		$indent = (count($absolute_path) - 1) * 2;
 
-		echo "\t<tr>\n";
+		echo "\t<tr" . ($this->active ? " class=\"active\"" : "") . ">\n";
 
-		echo "\t\t<td style=\"text-indent: " . $indent . "em\"" . ($this->active ? " class=\"active\"" : "") . ">";
+		echo "\t\t<td style=\"text-indent: " . $indent . "em\">";
 		if ($this->isLeaf(array()))
 		{
 			echo "<a href=\"./?" . ($this->active ? "stop" : "start") . "=" . implode(".", $absolute_path) . "\">";
