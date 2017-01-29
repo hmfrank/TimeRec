@@ -1,0 +1,44 @@
+body {
+	background-color: white;
+	font-family: sans-serif;
+}
+
+h1 {
+	font-family: serif;
+}
+
+table {
+	border-spacing: 0;
+}
+
+tr:nth-child(even) {
+	background-color: #ececec
+}
+
+tr:nth-child(odd) {
+	background-color: white;
+}
+
+td, th {
+	padding: 5px;
+}
+
+td:not(:first-child), th:not(:first-child) {
+	text-align: center;
+}
+
+th {
+	border-bottom: solid black 1px;
+}
+
+td:first-child, th:first-child {
+	border-right: solid black 1px;
+}
+
+a {
+	color: inherit;
+}
+
+.active {
+	color: tomato;
+}

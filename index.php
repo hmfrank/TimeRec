@@ -2,9 +2,11 @@
 <html lang="en">
 <head>
 
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
 <title>Time Recording</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet" href="style.css" />
 
 </head>
 <body>
@@ -53,12 +55,6 @@ $forest->calculateDurations($log_entries);
 <h1>Time Recording</h1>
 
 <?php $forest->show(); ?>
-
-<style>
-	.active {
-		background-color: #ffe9b9;
-	}
-</style>
 
 </body>
 </html>
