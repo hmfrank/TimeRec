@@ -79,8 +79,10 @@ class Forest
 
 		echo "\t<tr>\n";
 		echo "\t\t<th></th>\n";
+		echo "\t\t<th>Total</th>\n";
 		echo "\t\t<th>Last Week</th>\n";
 		echo "\t\t<th>Current Week</th>\n";
+		echo "\t\t<th>Today</th>\n";
 		echo "\t</tr>\n";
 
 		foreach ($this->roots as $root)
@@ -160,12 +162,14 @@ class Node
 	 */
 	function calculateDurations($log_entries, $absolute_path)
 	{
-		$this->durations = array(0, 0);
+		$this->durations = array(0, 0, 0, 0);
 
 		if ($this->isLeaf(array()))
 		{
-			$this->durations[0] = countSeconds($log_entries, $absolute_path, TimePeriod::getLastWeek());
-			$this->durations[1] = countSeconds($log_entries, $absolute_path, TimePeriod::getCurrentWeek());
+			$this->durations[0] = countSeconds($log_entries, $absolute_path, TimePeriod::getAllTime());
+			$this->durations[1] = countSeconds($log_entries, $absolute_path, TimePeriod::getLastWeek());
+			$this->durations[2] = countSeconds($log_entries, $absolute_path, TimePeriod::getCurrentWeek());
+			$this->durations[3] = countSeconds($log_entries, $absolute_path, TimePeriod::getToday());
 		}
 		else
 		{
@@ -175,8 +179,10 @@ class Node
 				$child_durations = $child->calculateDurations($log_entries, $absolute_path);
 				array_pop($absolute_path);
 
-				$this->durations[0] += $child_durations[0];
-				$this->durations[1] += $child_durations[1];
+				for ($i = count($child_durations) - 1; $i >= 0; $i--)
+				{
+					$this->durations[$i] += $child_durations[$i];
+				}
 			}
 		}
 

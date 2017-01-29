@@ -19,6 +19,11 @@ class TimePeriod
 		$this->end = $end;
 	}
 
+	static function getAllTime()
+	{
+		return new TimePeriod(PHP_INT_MIN, PHP_INT_MAX);
+	}
+
 	static function getCurrentWeek()
 	{
 		$timestamp = time();
@@ -36,6 +41,19 @@ class TimePeriod
 	{
 		$curent_week = TimePeriod::getCurrentWeek();
 		return new TimePeriod($curent_week->start - 3600 * 24 * 7, $curent_week->start);
+	}
+
+	static function getToday()
+	{
+		$timestamp = time();
+		$now = getdate($timestamp);
+
+		$seconds_into_day = $now["seconds"] + 60 * $now["minutes"] + 3600 * $now["hours"];
+
+		$start = $timestamp - $seconds_into_day;
+		$end = $start + 3600 * 24;
+
+		return new TimePeriod($start, $end);
 	}
 
 	/**
