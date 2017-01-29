@@ -13,14 +13,18 @@ function error($message)
 }
 
 /**
- * Prints `$n` tab characters.
- *
- * @param $n int
+ * @param $seconds int
+ * @return string
  */
-function indent($n)
+function formatTime($seconds)
 {
-	for ($i = 0; $i < $n; $i++)
-	{
-		echo "\t";
-	}
+	$s = $seconds % 60;
+	$minutes = intdiv($seconds, 60);
+	$m = $minutes % 60;
+	$h = intdiv($minutes, 60);
+
+	$s = ($s < 10 ? "0" : "") . $s;
+	$m = ($m < 10 ? "0" : "") . $m;
+
+	return join(":", array($h, $m, $s));
 }

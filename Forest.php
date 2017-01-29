@@ -266,7 +266,7 @@ class Node
 		$n_durations = count($this->durations);
 		for ($i = 0; $i < $n_durations; $i++)
 		{
-			echo "\t\t<td>" . $this->durations[$i] . "</td>\n";
+			echo "\t\t<td>" . formatTime($this->durations[$i]) . "</td>\n";
 		}
 
 		echo "\t</tr>\n";
