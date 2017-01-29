@@ -19,9 +19,9 @@ function error($message)
 function formatTime($seconds)
 {
 	$s = $seconds % 60;
-	$minutes = intdiv($seconds, 60);
+	$minutes = floor($seconds / 60);
 	$m = $minutes % 60;
-	$h = intdiv($minutes, 60);
+	$h = floor($minutes/ 60);
 
 	$s = ($s < 10 ? "0" : "") . $s;
 	$m = ($m < 10 ? "0" : "") . $m;
