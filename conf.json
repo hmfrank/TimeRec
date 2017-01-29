@@ -1,0 +1,17 @@
+{
+	"Projects" :
+	{
+		"Proj1" : {},
+		"Proj2" :
+		{
+			"Frontend" : {},
+			"Backend" : {}
+		}
+	},
+	"Writing" :
+	{
+		"Book 1" : {},
+		"Book 2" : {}
+	},
+	"MISC" : {}
+}
